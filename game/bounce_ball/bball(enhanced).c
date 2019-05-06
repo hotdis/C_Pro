@@ -4,7 +4,7 @@
 #include<time.h>
 #include<windows.h>
 
-#define MAX_BALLS 4
+#define MAX_BALLS 2
 #define WIDTH 20
 #define HEIGHT 10
 #define DELAY_TIME 200

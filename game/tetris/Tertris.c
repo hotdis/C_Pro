@@ -7,7 +7,7 @@
 #define WIDTH 15
 #define HEIGHT 25
 
-#define TIME_GO 6000
+#define TIME_GO 4500
 
 int lBlock[3][3] = { 0,1,0,0,1,0,0,1,1 };		//左拐子
 int rlBlock[3][3] = { 0,1,0,0,1,0,1,1,0 };		//右拐子
@@ -37,7 +37,7 @@ void draw_map();
 void start_up();
 
 void update_with_op(char );
-void move_lr(int);
+void move_left_or_right(int);
 int judge_edge(int);
 void update_without_op();
 int judge_move();
@@ -45,10 +45,11 @@ void change_att();
 
 void select_firuge();
 void roadin(int [3][3]);
-
+/*行满清除*/
 void delete_row();
+/*下移*/
 void move_down(int );
-
+/*结束判断*/
 void judge_over();
 
 void change_firuge();
@@ -89,30 +90,28 @@ int main() {
 	return 0;
 }
 
-//初始化地图
+/*绘制地图边框*/
 void start_up() {
-	for (int i = 0; i < HEIGHT; i++) {
-		for (int j = 0; j < WIDTH; j++) {
-			if ((i == HEIGHT - 2)||(i == HEIGHT - 1)||(j == 0)||(j == WIDTH - 1)) {
+	int i, j;
+	for(i = 0;i < HEIGHT;i++){
+		for(j = 0; j < WIDTH;j++){
+			if(i == 0 || i == HEIGHT - 1 || i == HEIGHT - 2 || j == 0 || j == WIDTH - 1){
 				map[i][j] = 9;
-			}
-			else {
-				map[i][j] = 0;
 			}
 		}
 	}
 }
 
-//绘制地图
+//
 void draw_map() {
 	system("cls");
 	for (int i = 0; i < HEIGHT - 1; i++) {
 		for (int j = 0; j < WIDTH; j++) {
 			switch (map[i][j]) {
-			case 9:printf("■"); break;
-			case 0:printf("  "); break;
-			case 1:printf("■"); break;
-			case 2:printf("■"); break;
+			case 9:printf("#"); break;
+			case 0:printf(" "); break;
+			case 1:printf("*"); break;
+			case 2:printf("*"); break;
 			default:;
 			}
 		}
@@ -163,14 +162,14 @@ void change_firuge() {
 //控制方块的左右移动
 void update_with_op(char ch) {
 	if (ch == 'a' && judge_edge(-1) == 0) {
-		move_lr(-1);
+		move_left_or_right(-1);
 	}
 	else if (ch == 'd' && judge_edge(1) == 0) {
-move_lr(1);
+		move_left_or_right(1);
 	}
 }
 
-void move_lr(int mve) {
+void move_left_or_right(int mve) {
 	for (int i = yposi + 1; i >= yposi - 1; i--) {
 		if (mve == 1) {
 			for (int j = xposi + 1; j >= xposi - 1; j--) {
